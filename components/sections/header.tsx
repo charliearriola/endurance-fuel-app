@@ -11,14 +11,19 @@ const navLinks = [
   { href: "#faq", label: "FAQ" },
 ];
 
-export function Header() {
+type HeaderProps = {
+  isAuthenticated: boolean;
+  onLogout: () => void | Promise<void>;
+};
+
+export function Header({ isAuthenticated, onLogout }: HeaderProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
-          href="#"
+          href="/"
           className="flex items-center gap-2 font-semibold tracking-tight"
           onClick={() => setOpen(false)}
         >
@@ -42,9 +47,35 @@ export function Header() {
           ))}
         </nav>
 
-        <Button asChild size="sm" className="hidden md:inline-flex">
-          <Link href="#pricing">Get your plan</Link>
-        </Button>
+        <div className="hidden items-center gap-3 md:flex">
+          {isAuthenticated ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Dashboard
+              </Link>
+              <form action={onLogout}>
+                <Button type="submit" variant="outline" size="sm">
+                  Logout
+                </Button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Login
+              </Link>
+              <Button asChild size="sm">
+                <Link href="/auth/signup">Get Started</Link>
+              </Button>
+            </>
+          )}
+        </div>
 
         <button
           type="button"
@@ -70,11 +101,38 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <Button asChild size="lg" className="mt-3 w-full">
-              <Link href="#pricing" onClick={() => setOpen(false)}>
-                Get your plan
-              </Link>
-            </Button>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-11 items-center rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+                <form action={onLogout}>
+                  <Button type="submit" variant="outline" size="lg" className="mt-3 w-full">
+                    Logout
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-11 items-center rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  Login
+                </Link>
+                <Button asChild size="lg" className="mt-3 w-full">
+                  <Link href="/auth/signup" onClick={() => setOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
       )}
