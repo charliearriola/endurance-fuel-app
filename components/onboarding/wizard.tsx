@@ -43,9 +43,18 @@ const GOALS: { value: Goal; label: string; desc: string }[] = [
 const DIETARY_OPTIONS = [
   { value: "vegetarian", label: "Vegetarian" },
   { value: "vegan", label: "Vegan" },
+  { value: "pescatarian", label: "Pescatarian" },
+  { value: "carnivore", label: "Carnivore / Meat only" },
   { value: "gluten_free", label: "Gluten-free" },
   { value: "dairy_free", label: "Dairy-free" },
   { value: "nut_free", label: "Nut-free" },
+  { value: "egg_free", label: "Egg-free" },
+  { value: "soy_free", label: "Soy-free" },
+  { value: "no_pork", label: "No pork" },
+  { value: "no_shellfish", label: "No shellfish" },
+  { value: "halal", label: "Halal" },
+  { value: "kosher", label: "Kosher" },
+  { value: "low_fodmap", label: "Low FODMAP" },
 ];
 
 type FormState = {
@@ -53,9 +62,9 @@ type FormState = {
   sex: Sex | "";
   weight_kg: string;
   height_cm: string;
-  sport: Sport | "";
+  sports: Sport[];
   experience_level: ExperienceLevel | "";
-  goal: Goal | "";
+  goals: Goal[];
   dietary_restrictions: string[];
 };
 
@@ -64,9 +73,9 @@ const initialState: FormState = {
   sex: "",
   weight_kg: "",
   height_cm: "",
-  sport: "",
+  sports: [],
   experience_level: "",
-  goal: "",
+  goals: [],
   dietary_restrictions: [],
 };
 
@@ -75,9 +84,13 @@ function isStepValid(step: number, form: FormState) {
     return Boolean(form.age && form.sex && form.weight_kg && form.height_cm);
   }
   if (step === 2) {
-    return Boolean(form.sport && form.experience_level);
+    return form.sports.length > 0 && Boolean(form.experience_level);
   }
-  return Boolean(form.goal);
+  return form.goals.length > 0;
+}
+
+function toggleArrayValue<T>(arr: T[], value: T): T[] {
+  return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 }
 
 export function OnboardingWizard() {
@@ -89,12 +102,16 @@ export function OnboardingWizard() {
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
+  const toggleSport = (value: Sport) =>
+    setForm((prev) => ({ ...prev, sports: toggleArrayValue(prev.sports, value) }));
+
+  const toggleGoal = (value: Goal) =>
+    setForm((prev) => ({ ...prev, goals: toggleArrayValue(prev.goals, value) }));
+
   const toggleDietary = (value: string) =>
     setForm((prev) => ({
       ...prev,
-      dietary_restrictions: prev.dietary_restrictions.includes(value)
-        ? prev.dietary_restrictions.filter((v) => v !== value)
-        : [...prev.dietary_restrictions, value],
+      dietary_restrictions: toggleArrayValue(prev.dietary_restrictions, value),
     }));
 
   const goNext = () => {
@@ -112,9 +129,9 @@ export function OnboardingWizard() {
       sex: form.sex as Sex,
       weight_kg: Number(form.weight_kg),
       height_cm: Number(form.height_cm),
-      sport: form.sport as Sport,
+      sports: form.sports,
       experience_level: form.experience_level as ExperienceLevel,
-      goal: form.goal as Goal,
+      goals: form.goals,
       dietary_restrictions: form.dietary_restrictions,
     };
 
@@ -211,22 +228,23 @@ export function OnboardingWizard() {
 
         {step === 2 && (
           <div>
-            <h1 className="text-xl font-semibold">Your sport</h1>
+            <h1 className="text-xl font-semibold">Your sports</h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              This shapes the fueling guidance you&apos;ll get.
+              This shapes the fueling guidance you&apos;ll get. Pick as many as apply.
             </p>
 
             <div className="mt-6">
-              <span className="text-sm font-medium">Main sport</span>
+              <span className="text-sm font-medium">Main sport(s)</span>
               <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {SPORTS.map(({ value, label, icon: Icon }) => (
                   <button
                     key={value}
                     type="button"
-                    onClick={() => update("sport", value)}
+                    onClick={() => toggleSport(value)}
+                    aria-pressed={form.sports.includes(value)}
                     className={cn(
                       "flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border p-4 text-sm font-medium transition-colors",
-                      form.sport === value
+                      form.sports.includes(value)
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
                     )}
@@ -268,9 +286,9 @@ export function OnboardingWizard() {
 
         {step === 3 && (
           <div>
-            <h1 className="text-xl font-semibold">Your goal</h1>
+            <h1 className="text-xl font-semibold">Your goals</h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              We&apos;ll tailor your plan around this.
+              We&apos;ll tailor your plan around these. Pick as many as apply.
             </p>
 
             <div className="mt-6 space-y-2">
@@ -278,10 +296,11 @@ export function OnboardingWizard() {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => update("goal", value)}
+                  onClick={() => toggleGoal(value)}
+                  aria-pressed={form.goals.includes(value)}
                   className={cn(
                     "flex min-h-11 w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-                    form.goal === value
+                    form.goals.includes(value)
                       ? "border-primary bg-primary/10"
                       : "border-border hover:border-primary/40"
                   )}
@@ -307,6 +326,7 @@ export function OnboardingWizard() {
                     key={value}
                     type="button"
                     onClick={() => toggleDietary(value)}
+                    aria-pressed={form.dietary_restrictions.includes(value)}
                     className={cn(
                       "min-h-11 rounded-full border px-4 text-sm font-medium transition-colors",
                       form.dietary_restrictions.includes(value)

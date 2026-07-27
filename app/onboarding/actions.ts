@@ -9,9 +9,9 @@ export type OnboardingData = {
   sex: Sex;
   weight_kg: number;
   height_cm: number;
-  sport: Sport;
+  sports: Sport[];
   experience_level: ExperienceLevel;
-  goal: Goal;
+  goals: Goal[];
   dietary_restrictions: string[];
 };
 
@@ -34,9 +34,9 @@ export async function completeOnboarding(
       sex: data.sex,
       weight_kg: data.weight_kg,
       height_cm: data.height_cm,
-      sport: data.sport,
+      sports: data.sports,
       experience_level: data.experience_level,
-      goal: data.goal,
+      goals: data.goals,
       dietary_restrictions: data.dietary_restrictions,
       onboarding_completed_at: new Date().toISOString(),
     })

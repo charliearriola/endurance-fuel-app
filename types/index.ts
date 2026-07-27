@@ -12,9 +12,9 @@ export type Profile = {
   sex: Sex | null;
   weight_kg: number | null;
   height_cm: number | null;
-  sport: Sport | null;
+  sports: Sport[];
   experience_level: ExperienceLevel | null;
-  goal: Goal | null;
+  goals: Goal[];
   dietary_restrictions: string[];
   plan_type: PlanType;
   onboarding_completed_at: string | null;
