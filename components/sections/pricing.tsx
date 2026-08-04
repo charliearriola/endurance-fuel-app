@@ -177,7 +177,17 @@ export function Pricing() {
               }
             >
               <Link
-                href={`#checkout-${tier.name.toLowerCase().replace(/\s+/g, "-")}`}
+                href={
+                  tier.priceType === "free"
+                    ? "/auth/signup"
+                    : tier.priceType === "one-time"
+                      ? (tier.checkoutOneTime ?? "#")
+                      : period === "annual"
+                        ? (tier.checkoutAnnual ?? "#")
+                        : (tier.checkoutMonthly ?? "#")
+                }
+                target={tier.priceType !== "free" ? "_blank" : undefined}
+                rel={tier.priceType !== "free" ? "noopener noreferrer" : undefined}
               >
                 {tier.cta}
               </Link>

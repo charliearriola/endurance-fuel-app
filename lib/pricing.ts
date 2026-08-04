@@ -19,6 +19,8 @@ export const pricingTiers: PricingTier[] = [
     tagline: "Everything you need for one race.",
     priceType: "one-time",
     oneTimePrice: 15,
+    checkoutOneTime:
+      "https://gas2u.lemonsqueezy.com/checkout/buy/e7fe0bc2-62e4-40db-b844-ddab78461960",
     features: [
       "Complete Race Day Protocol",
       "Hour-by-hour fueling script",
@@ -34,6 +36,10 @@ export const pricingTiers: PricingTier[] = [
     priceType: "subscription",
     monthlyPrice: 9,
     annualPrice: 54,
+    checkoutMonthly:
+      "https://gas2u.lemonsqueezy.com/checkout/buy/bf17dd29-6fd7-4aa4-8f91-eaf6c1e896b3?enabled=1955545",
+    checkoutAnnual:
+      "https://gas2u.lemonsqueezy.com/checkout/buy/f8fbea0c-2cd6-4b88-9ad4-80e4a1b5d509",
     features: [
       "Sport-specific macro calculator",
       "Pre / during / post workout guides",
@@ -49,6 +55,10 @@ export const pricingTiers: PricingTier[] = [
     priceType: "subscription",
     monthlyPrice: 19,
     annualPrice: 114,
+    checkoutMonthly:
+      "https://gas2u.lemonsqueezy.com/checkout/buy/f7dd34e4-3cea-4a23-9ed7-c0a5203be6f8?enabled=1955579",
+    checkoutAnnual:
+      "https://gas2u.lemonsqueezy.com/checkout/buy/41d83444-24fc-4fd8-a580-53b52690cb85",
     features: [
       "Everything in Starter",
       "Race Day Protocol included",

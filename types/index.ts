@@ -123,6 +123,9 @@ export type PricingTier = {
   oneTimePrice?: number;
   monthlyPrice?: number;
   annualPrice?: number;
+  checkoutOneTime?: string;
+  checkoutMonthly?: string;
+  checkoutAnnual?: string;
   features: string[];
   cta: string;
   ctaVariant?: "default" | "outline";
